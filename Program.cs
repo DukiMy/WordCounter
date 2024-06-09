@@ -13,9 +13,9 @@ namespace BibleTextScraper;
 */
 class Program
 {
-    private const string BASE_PAGE = "https://biblehub.com/text/";
-    private const string START_PAGE = $"{BASE_PAGE}matthew/1-1.htm";
-    private const string END_PAGE = $"{BASE_PAGE}genesis/1-1.htm";
+    private const string BASE_PAGE = "withheld";
+    private const string START_PAGE = $"{BASE_PAGE}withheld";
+    private const string END_PAGE = $"{BASE_PAGE}withheld";
     private const string NEXT_BUTTON_XPATH = "/html/body/div[4]/table/tbody/tr/td/div[1]/table/tbody/tr/td/div/a[2]";
     private const string GREEK_WORD = "δὲ";
     private const string OUTPUT_PATH = "output.txt";
