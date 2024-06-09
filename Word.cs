@@ -1,0 +1,15 @@
+namespace BibleTextScraper;
+
+struct Word
+{
+    public string Verse { get; set; }
+    public string GreekWord { get; set; }
+    public string EnglishTranslation { get; set; }
+
+    public Word(string _verse, string _greekWord, string _englishTranslation)
+    {
+        Verse = _verse.Split(" Greek ")[0];
+        GreekWord = _greekWord.Split("de")[0];
+        EnglishTranslation = _englishTranslation.Trim();
+    }
+}

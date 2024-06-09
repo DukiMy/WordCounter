@@ -1,0 +1,49 @@
+.fake
+# Ignore build output
+bin/
+obj/
+
+# Ignore NuGet packages
+*.nupkg
+*.snupkg
+packages/
+
+# Ignore Playwright browser binaries
+**/playwright-*/.local-browsers/
+
+# Ignore user-specific files
+*.userprefs
+*.suo
+*.user
+*.sln.docstates
+
+# Ignore logs and debugging files
+*.log
+*.vscode/
+.vs/
+
+# Ignore Visual Studio Code workspace settings
+.code-workspace
+
+# Ignore JetBrains Rider files
+.idea/
+*.sln.iml
+
+# Ignore macOS specific files
+.DS_Store
+
+# Ignore Windows specific files
+Thumbs.db
+Desktop.ini
+
+# Ignore dotnet build output
+bin/
+obj/
+
+# Ignore NuGet packages
+*.nupkg
+*.snupkg
+packages/
+
+# Ignore scraper output
+output/

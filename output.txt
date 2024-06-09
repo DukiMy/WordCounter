@@ -1,0 +1,43 @@
+
+then: 374
+Now: 7
+now,: 55
+now: 380
+And: 265
+and: 37
+but: 37
+But: 64
+however,: 33
+nothing: 25
+Nor: 3
+however: 266
+neither: 7
+nor: 64
+not even: 16
+also: 17
+also,: 2
+Yet: 1
+not: 4
+then,: 39
+and the: 1
+Neither: 5
+-: 1
+nor even: 1
+Nothing: 4
+Then: 1
+[Let there be] nothing: 1
+moreover: 4
+to none: 1
+even: 1
+in no way: 1
+anything: 2
+Not: 2
+Not even: 6
+in nothing: 1
+yet: 2
+therefore: 2
+none: 1
+while: 1
+No: 1
+nothing,: 1
+neither [can]: 1
