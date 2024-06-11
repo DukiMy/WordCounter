@@ -1,4 +1,6 @@
-.fake
+# Ignore proprietary files
+Site.cs
+
 # Ignore build output
 bin/
 obj/
@@ -44,6 +46,3 @@ obj/
 *.nupkg
 *.snupkg
 packages/
-
-# Ignore scraper output
-output/

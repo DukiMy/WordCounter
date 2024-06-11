@@ -7,17 +7,18 @@
 * If you wish to contribute, please do so.
 */
 using Microsoft.Playwright;
+using System.Text.Encodings.Web;
+using System.Text.Json;
+using System.Text.Unicode;
+using static BibleTextScraper.Site;
 namespace BibleTextScraper;
 /**
 * The main class of the program.
 */
 class Program
 {
-    private const string BASE_PAGE = "withheld";
-    private const string START_PAGE = $"{BASE_PAGE}withheld";
-    private const string END_PAGE = $"{BASE_PAGE}withheld";
     private const string NEXT_BUTTON_XPATH = "/html/body/div[4]/table/tbody/tr/td/div[1]/table/tbody/tr/td/div/a[2]";
-    private const string GREEK_WORD = "δὲ";
+    private const string GREEK_WORD = "δὲde";   // The scraped words returns "δὲ" in both latin and greek script. Like this: "δὲde"
     private const string OUTPUT_PATH = "output.txt";
     private static List<Word> words = new List<Word>();
     /**
@@ -56,7 +57,7 @@ class Program
 
             Console.WriteLine($"Current URL: {currentUrl}");
             await ReadTableAsync(page);
-            await Task.WhenAll(LogResultsAsync(), ClickOnNextPageAsync(page));
+            await Task.WhenAll(ToTxtAsync(), ToConsoleAsync(), ToJsonAsync(), ClickOnNextPageAsync(page));
 
         } while (currentUrl != END_PAGE);
     }
@@ -122,16 +123,25 @@ class Program
     * Logs the results.
     * @return A task.
     */
-    public static async Task LogResultsAsync()
+    public static async Task<List<(string, int)>> GetWordCountsAsync()
+    {
+        return await Task.Run(() =>
+        {
+            return words
+                .GroupBy(w => w.EnglishTranslation)
+                .Select(g => (g.Key, g.Count()))
+                .ToList();
+        });
+    }
+    /**
+    * Writes the results to a text file.
+    * @return A task.
+    */
+    public static async Task ToTxtAsync()
     {
         string output = "";
 
-        List<(string, int)> wordCount = words
-            .GroupBy(w => w.EnglishTranslation)
-            .Select(g => (g.Key, g.Count()))
-            .ToList();
-
-        foreach (var (word, count) in wordCount)
+        foreach (var (word, count) in await GetWordCountsAsync())
         {
             output = $"{output}\n{word}: {count}";
         }
@@ -140,5 +150,35 @@ class Program
         {
             await writer.WriteAsync(output);
         }
+    }
+    /**
+    * Writes the results to the console.
+    * @return A task.
+    */
+    public static async Task ToConsoleAsync()
+    {
+        string output = "";
+
+        foreach (var (word, count) in await GetWordCountsAsync())
+        {
+            output = $"{output}\n{word}: {count}";
+        }
+
+        Console.WriteLine(output);
+    }
+    /**
+    * Writes the results to a JSON file.
+    * @return A task.
+    */
+    public static async Task ToJsonAsync()
+    {
+        var options = new JsonSerializerOptions
+        {
+            Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
+            WriteIndented = true
+        };
+        
+        string json = JsonSerializer.Serialize(words, options);
+        await File.WriteAllTextAsync("output.json", json);
     }
 }
