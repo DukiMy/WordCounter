@@ -39,6 +39,10 @@ class Program
         // Crawl the website
         await CrawlAsync(page);
 
+        // Write the results to a file
+        await Task.WhenAll(ToTxtAsync(), ToConsoleAsync(), ToJsonAsync());
+
+
         // Close the browser
         await browser.CloseAsync();
     }
@@ -57,7 +61,7 @@ class Program
 
             Console.WriteLine($"Current URL: {currentUrl}");
             await ReadTableAsync(page);
-            await Task.WhenAll(ToTxtAsync(), ToConsoleAsync(), ToJsonAsync(), ClickOnNextPageAsync(page));
+            await ClickOnNextPageAsync(page);
 
         } while (currentUrl != END_PAGE);
     }
