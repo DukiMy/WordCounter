@@ -39,9 +39,8 @@ class Program
         // Crawl the website
         await CrawlAsync(page);
 
-        // Write the results to a file
+        // Produce the results
         await Task.WhenAll(ToTxtAsync(), ToConsoleAsync(), ToJsonAsync());
-
 
         // Close the browser
         await browser.CloseAsync();
