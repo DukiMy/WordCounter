@@ -31,7 +31,9 @@ class Program
     public static async Task Main(string[] args)
     {
         // Crawl the website
-        await CrawlAsync(await CreatePageAsync());
+        await CrawlAsync(
+            await CreatePageAsync()
+        );
 
         // Produce the results
         await Task.WhenAll(ToTxtAsync(), ToConsoleAsync(), ToJsonAsync());
@@ -45,15 +47,17 @@ class Program
     */
     private static async Task<IPage> CreatePageAsync()
     {
-        using var playwright = await Playwright.CreateAsync();
-        await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = true, Timeout = 30000 });
-        context = await browser.NewContextAsync();
-        page = await context.NewPageAsync();
+        context = await (await Playwright.CreateAsync())
+            .Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = true, Timeout = 30000 })
+            .ContinueWith(browser => browser.Result.NewContextAsync())
+            .Unwrap();
 
-        // Go to the start page
-        await page.GotoAsync(START_PAGE);
-
-        return page;
+        return await context.NewPageAsync()
+            .ContinueWith(pageTask => 
+            {
+                var page = pageTask.Result;
+                return page.GotoAsync(START_PAGE).ContinueWith(_ => page);
+            }).Unwrap();
     }
     /**
     * Crawls the website.
