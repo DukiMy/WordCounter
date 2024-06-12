@@ -21,6 +21,8 @@ class Program
     private const string GREEK_WORD = "δὲde";   // The scraped words returns "δὲ" in both latin and greek script. Like this: "δὲde"
     private const string OUTPUT_PATH = "output.txt";
     private static List<Word> words = new List<Word>();
+    private static IBrowserContext? context;
+    private static IPage? page;
     /**
     * The programs starting point.
     * @param args The command line arguments.
@@ -28,29 +30,37 @@ class Program
     */
     public static async Task Main(string[] args)
     {
-        using var playwright = await Playwright.CreateAsync();
-        await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = true, Timeout = 30000 });
-        IBrowserContext context = await browser.NewContextAsync();
-        IPage page = await context.NewPageAsync();
-
-        // Go to the start page
-        await page.GotoAsync(START_PAGE);
-
         // Crawl the website
-        await CrawlAsync(page);
+        await CrawlAsync(await CreatePageAsync());
 
         // Produce the results
         await Task.WhenAll(ToTxtAsync(), ToConsoleAsync(), ToJsonAsync());
 
         // Close the browser
-        await browser.CloseAsync();
+        await page!.CloseAsync();
+    }
+    /**
+    * Creates a new page.
+    * @return A task.
+    */
+    private static async Task<IPage> CreatePageAsync()
+    {
+        using var playwright = await Playwright.CreateAsync();
+        await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = true, Timeout = 30000 });
+        context = await browser.NewContextAsync();
+        page = await context.NewPageAsync();
+
+        // Go to the start page
+        await page.GotoAsync(START_PAGE);
+
+        return page;
     }
     /**
     * Crawls the website.
     * @param page The page to crawl.
     * @return A task.
     */
-    public static async Task CrawlAsync(IPage page)
+    private static async Task CrawlAsync(IPage page)
     {
         string currentUrl;
 
@@ -69,7 +79,7 @@ class Program
     * @param page The page to read.
     * @return A task.
     */
-    public static async Task ReadTableAsync(IPage page)
+    private static async Task ReadTableAsync(IPage page)
     {
         string verse;
         IReadOnlyList<IElementHandle> rows;
@@ -108,7 +118,7 @@ class Program
     * @param page The page to click on.
     * @return A task.
     */
-    public static async Task ClickOnNextPageAsync(IPage page)
+    private static async Task ClickOnNextPageAsync(IPage page)
     {
         ILocator nextLink = page.Locator($"xpath={NEXT_BUTTON_XPATH}");
 
@@ -126,7 +136,7 @@ class Program
     * Logs the results.
     * @return A task.
     */
-    public static async Task<List<(string, int)>> GetWordCountsAsync()
+    private static async Task<List<(string, int)>> GetWordCountsAsync()
     {
         return await Task.Run(() =>
         {
@@ -140,7 +150,7 @@ class Program
     * Writes the results to a text file.
     * @return A task.
     */
-    public static async Task ToTxtAsync()
+    private static async Task ToTxtAsync()
     {
         string output = "";
 
@@ -158,7 +168,7 @@ class Program
     * Writes the results to the console.
     * @return A task.
     */
-    public static async Task ToConsoleAsync()
+    private static async Task ToConsoleAsync()
     {
         string output = "";
 
@@ -173,7 +183,7 @@ class Program
     * Writes the results to a JSON file.
     * @return A task.
     */
-    public static async Task ToJsonAsync()
+    private static async Task ToJsonAsync()
     {
         var options = new JsonSerializerOptions
         {
