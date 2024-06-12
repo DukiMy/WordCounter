@@ -22,7 +22,6 @@ class Program
     private const string OUTPUT_PATH = "output.txt";
     private static List<Word> words = new List<Word>();
     private static IBrowserContext? context;
-    private static IPage? page;
     /**
     * The programs starting point.
     * @param args The command line arguments.
@@ -36,10 +35,7 @@ class Program
         );
 
         // Produce the results
-        await Task.WhenAll(ToTxtAsync(), ToConsoleAsync(), ToJsonAsync());
-
-        // Close the browser
-        await page!.CloseAsync();
+        await Task.WhenAll(ToTxtAsync(), ToJsonAsync());
     }
     /**
     * Creates a new page.
@@ -98,7 +94,9 @@ class Program
         {
             te.Data.Add("URL", page.Url);
             new ErrorLogger("error.log").LogError(te);
-            await page.ReloadAsync();
+            await page.GoBackAsync();
+            await Task.WhenAll(ToTxtAsync(), ToJsonAsync());
+
             return;
         }
 
