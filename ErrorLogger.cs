@@ -24,7 +24,6 @@ Data: {exception.Data}
 HResult: {exception.HResult}
 Runtime type name: {exception.GetType().Name}
 Runtime type: {exception.GetType()}
-Runtime type: {exception.GetType().DeclaringMethod}
 ";
 
         Console.WriteLine($"Error: {exception.Message}");
