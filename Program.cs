@@ -94,8 +94,8 @@ class Program
         {
             te.Data.Add("URL", page.Url);
             new ErrorLogger("error.log").LogError(te);
-            await page.GoBackAsync();
             await Task.WhenAll(ToTxtAsync(), ToJsonAsync());
+            await page.GoBackAsync();
 
             return;
         }
@@ -108,7 +108,7 @@ class Program
                 string? greekWord = await columns[1].TextContentAsync();
                 string? englishTranslation = await columns[2].TextContentAsync();
 
-                if (greekWord != null && greekWord.Contains(GREEK_WORD))
+                if (greekWord != null && greekWord.Contains(GREEK_WORD) && greekWord != words.LastOrDefault().GreekWord)
                 {
                     words.Add(new Word(verse, greekWord ?? "", englishTranslation ?? ""));
                 }

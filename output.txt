@@ -1,0 +1,29 @@
+
+then: 532
+now: 697
+now : 88
+and: 360
+but: 153
+however : 90
+however: 586
+also: 25
+also : 2
+yet: 5
+then : 52
+and the: 1
+-: 1
+moreover: 4
+therefore: 3
+while: 1
+and [they said]: 1
+however [are]: 1
+but [with]: 1
+and [for]: 1
+for: 1
+though: 2
+even: 2
+nevertheless: 1
+indeed: 2
+and : 1
+rather: 1
+but [he]: 1
